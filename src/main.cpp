@@ -148,7 +148,7 @@ int main(int argc, char** argv)
     printf("Writing output file...\n");
     if (blackfaces) complex->saveBlackFaces("black_faces.off", triangulate);
     else if (surfmesh) complex->saveSkin("skin.off", bool_opcode, triangulate);
-    else complex->saveMesh((triangulate)?("volume.tet"):("volume.msh"), bool_opcode, triangulate);
+    else complex->saveMesh((triangulate)?("volume.vtk"):("volume.msh"), bool_opcode, triangulate);
     printf("Done.\n");
 
     return 0;

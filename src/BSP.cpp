@@ -3,6 +3,7 @@
 #include <set>
 #include <time.h>
 #include <algorithm>
+#include <array>
 #include "BSP.h"
 #include "delaunay.h"
 
@@ -2703,18 +2704,25 @@ void BSPcomplex::saveMesh(const char* filename, const char bool_opcode, bool tet
             if (vrts_visit[i]) num_v++;
         }
 
-        f << final_numver << " vertices\n";
-        f << final_tets.size() / 4 << " tets\n";
+        f << "# vtk DataFile Version 2.0\n";
+        f << "File produced by VolumeMesher by Marco Attene\n";
+        f << "ASCII\n";
+        f << "DATASET UNSTRUCTURED_GRID\n";
 
         // Print vertices coordinates
+        f << "POINTS " << final_numver << " float\n";
         for (uint32_t v = 0; v < vertices.size(); v++) if (vrts_visit[v]) f << (*vertices[v]) << "\n";
 
         // Print tets
+        auto num_cells = final_tets.size() / 4;
+        f << "CELLS " << num_cells << " " << (4+1) * num_cells << "\n";
         for (uint32_t t = 0; t < final_tets.size(); t += 4)
             f << "4 " << vmap[final_tets[t]] << " "
             << vmap[final_tets[t + 1]] << " "
             << vmap[final_tets[t + 2]] << " "
             << vmap[final_tets[t + 3]] << "\n";
+        f << "CELL_TYPES " << num_cells << "\n";
+        for (uint32_t t = 0; t < final_tets.size(); t += 4) f << "10\n";
     }
     else
     {
